@@ -1,0 +1,142 @@
+﻿@model SeoAnalyser.Models.AnalysisResult
+
+@{
+    ViewBag.Title = "Analyse";
+}
+
+<link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<div class="jumbotron">
+    <h1>SEO Analyser</h1>
+</div>
+
+<div class="row">
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+
+    <form action="/Home/Analyse" method="post">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Text or URL</label>
+            @Html.TextBoxFor(m => m.Input, new { @class = "form-control" })
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsRemoveStopWords, new { @class = "form-check-input" })
+            <label class="form-check-label" for="defaultCheck1">
+                Should Remove Stop Words? (When this is checked, stop-words in meta tags will be removed as well)
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateOccurrencesOfEachWords)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Occurrences of Each Words?
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateKeywordsInMetaTags)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Number of Occurrences of Words in Meta Tags (Title, Description and Keywords only)?
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateNumberOfExternalLinks)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Number of External Links?
+            </label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Analyse</button>
+    </form>
+
+    @if (Model.WordsAndCount.Any())
+    {
+        <h2>Words Found</h2>
+        <table id="words-from-input-table" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kv in Model.WordsAndCount)
+                {
+                    <tr>
+                        <td>@kv.Key</td>
+                        <td>@kv.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.WordsInMetaTagsAndCount.Any())
+    {
+        <h2>Meta Tags Words Found</h2>
+        <table id="words-from-meta-tags" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kv in Model.WordsInMetaTagsAndCount)
+                {
+                    <tr>
+                        <td>@kv.Key</td>
+                        <td>@kv.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.ExternalLinks.Any())
+    {
+        <h2>Link(s) Found</h2>
+        <table id="external-links-table" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var link in Model.ExternalLinks)
+                {
+                    <tr>
+                        <td>@link</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section scripts
+{
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#words-from-input-table').DataTable({
+                "ordering": true
+            });
+        });
+        
+        $(document).ready(function () {
+            $('#words-from-meta-tags').DataTable({
+                "ordering": true
+            });
+        });
+
+        $(document).ready(function () {
+            $('#external-links-table').DataTable({
+                "ordering": true
+            });
+        });
+    </script>
+}

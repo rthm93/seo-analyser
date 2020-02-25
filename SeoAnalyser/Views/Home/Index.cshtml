@@ -1,0 +1,50 @@
+﻿@model SeoAnalyser.Models.AnalyseRequest
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>SEO Analyser</h1>
+</div>
+
+<div class="row">
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+
+    <form action="/Home/Analyse" method="post">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Text or URL</label>
+            @Html.TextBoxFor(m => m.Input, new { @class = "form-control" })
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsRemoveStopWords, new { @class = "form-check-input" })
+            <label class="form-check-label" for="defaultCheck1">
+                Should Remove Stop Words?
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateOccurrencesOfEachWords)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Occurrences of Each Words?
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateKeywordsInMetaTags)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Number of Occurrences Keywords in Meta Tags?
+            </label>
+        </div>
+        <div class="form-check">
+            @Html.CheckBoxFor(m => m.IsCalculateNumberOfExternalLinks)
+            <label class="form-check-label" for="defaultCheck1">
+                Should Calculate Number of External Links?
+            </label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Analyse</button>
+    </form>
+</div>
