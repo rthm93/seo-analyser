@@ -15,6 +15,13 @@
         </div>
     }
 
+    @if (!string.IsNullOrEmpty(ViewBag.Warning))
+    {
+        <div class="alert alert-warning" role="alert">
+            @ViewBag.Warning
+        </div>
+    }
+
     <form action="/Home/Analyse" method="post">
         <div class="form-group">
             <label for="exampleInputEmail1">Text or URL</label>
@@ -23,25 +30,28 @@
         <div class="form-check">
             @Html.CheckBoxFor(m => m.IsRemoveStopWords, new { @class = "form-check-input" })
             <label class="form-check-label" for="defaultCheck1">
-                Should Remove Stop Words?
+                Should Remove Stop Words? (When this is checked, stop-words in meta tags will be removed as well)
             </label>
         </div>
+
+        <h3>Select Analysis Results Types</h3>
+
         <div class="form-check">
             @Html.CheckBoxFor(m => m.IsCalculateOccurrencesOfEachWords)
             <label class="form-check-label" for="defaultCheck1">
-                Should Calculate Occurrences of Each Words?
+                Calculate Occurrences of Each Words?
             </label>
         </div>
         <div class="form-check">
             @Html.CheckBoxFor(m => m.IsCalculateKeywordsInMetaTags)
             <label class="form-check-label" for="defaultCheck1">
-                Should Calculate Number of Occurrences Keywords in Meta Tags?
+                Calculate Number of Occurrences of Words in Meta Tags (Title, Description and Keywords only)?
             </label>
         </div>
         <div class="form-check">
             @Html.CheckBoxFor(m => m.IsCalculateNumberOfExternalLinks)
             <label class="form-check-label" for="defaultCheck1">
-                Should Calculate Number of External Links?
+                Calculate Number of External Links?
             </label>
         </div>
 

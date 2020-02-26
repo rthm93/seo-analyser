@@ -1,5 +1,4 @@
-﻿using AngleSharp.Html.Parser;
-using SeoAnalyser.Models;
+﻿using SeoAnalyser.Models;
 using SeoAnalyser.Utilities;
 using SeoAnalyser.Utilities.Interfaces;
 using System;
@@ -16,11 +15,20 @@ namespace SeoAnalyser.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Get landing page.
+        /// </summary>
+        /// <returns>Landing page.</returns>
         public ActionResult Index()
         {
             return View(new AnalyseRequest());
         }
 
+        /// <summary>
+        /// Analyses input from user.
+        /// </summary>
+        /// <param name="request">Analyse request.</param>
+        /// <returns>Analysis results.</returns>
         public async Task<ActionResult> Analyse(AnalyseRequest request)
         {
             if (!ModelState.IsValid)
@@ -30,6 +38,17 @@ namespace SeoAnalyser.Controllers
             }
 
             var result = new AnalysisResult(request);
+
+            if(!new bool[]
+            {
+                request.IsCalculateKeywordsInMetaTags,
+                request.IsCalculateNumberOfExternalLinks,
+                request.IsCalculateOccurrencesOfEachWords
+            }.Any(x => x))
+            {
+                ViewBag.Warning = "No Analysis Result Type selected!";
+                return View(result);
+            }
 
             try
             {

@@ -24,6 +24,11 @@ namespace SeoAnalyser.Utilities
             this.wordAnalyser = wordAnalyser;
         }
 
+        /// <summary>
+        /// Fetch and analyses web page from uri submitted by user.
+        /// </summary>
+        /// <param name="request">Analyse request.</param>
+        /// <returns>Returns analyse results.</returns>
         public async Task<AnalysisResult> Analyse(AnalyseRequest request)
         {
             var result = new AnalysisResult(request);
@@ -31,12 +36,20 @@ namespace SeoAnalyser.Utilities
 
             if (response.IsSuccessStatusCode)
             {
+                List<string> splittedString = new List<string>();
                 var html = await response.Content.ReadAsStringAsync();
 
-                var doc = new HtmlDocument();
-                doc.LoadHtml(html);
-                var splittedString = await wordAnalyser.SplitWords(doc.DocumentNode.SelectNodes("//body")?.FirstOrDefault()?.InnerText ?? "", request.IsRemoveStopWords);
-                result.WordsAndCount = await wordAnalyser.CalculateOccurrences(splittedString, splittedString.Distinct().ToList());
+                if(request.IsCalculateOccurrencesOfEachWords || request.IsCalculateKeywordsInMetaTags)
+                {
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(html);
+                    splittedString = await wordAnalyser.SplitWords(doc.DocumentNode.SelectNodes("//body")?.FirstOrDefault()?.InnerText ?? "", request.IsRemoveStopWords);
+                }
+
+                if (request.IsCalculateOccurrencesOfEachWords)
+                {
+                    result.WordsAndCount = await wordAnalyser.CalculateOccurrences(splittedString, splittedString.Distinct().ToList());
+                }
 
                 if (request.IsCalculateKeywordsInMetaTags)
                 {

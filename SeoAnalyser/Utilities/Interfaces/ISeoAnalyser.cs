@@ -9,6 +9,11 @@ namespace SeoAnalyser.Utilities.Interfaces
 {
     public interface ISeoAnalyser
     {
+        /// <summary>
+        /// Performs SEO analysis.
+        /// </summary>
+        /// <param name="request">Analyse request.</param>
+        /// <returns>Returns analyse results.</returns>
         Task<AnalysisResult> Analyse(AnalyseRequest request);
     }
 }

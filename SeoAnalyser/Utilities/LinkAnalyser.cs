@@ -10,6 +10,11 @@ namespace SeoAnalyser.Utilities
 {
     public class LinkAnalyser : ILinkAnalyser
     {
+        /// <summary>
+        /// Get external links from raw html.
+        /// </summary>
+        /// <param name="html">Raw html.</param>
+        /// <returns>Return html links.</returns>
         public Task<List<string>> GetExternalLinks(string html)
         {
             var doc = new HtmlDocument();

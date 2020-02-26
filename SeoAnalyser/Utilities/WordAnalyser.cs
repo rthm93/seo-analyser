@@ -22,6 +22,11 @@ namespace SeoAnalyser.Utilities
         /// </summary>
         public static readonly char[] WordSeparators = new char[] { ' ', ',', '.', '?', '!', '\'', '/', '\\', '(', '[', ']', ')', '{', '}', '-', '\r', '\t', '\n' };
 
+        /// <summary>
+        /// Analyses input submitted by user.
+        /// </summary>
+        /// <param name="request">Analyse request.</param>
+        /// <returns>Returns analyse result.</returns>
         public async Task<AnalysisResult> Analyse(AnalyseRequest request)
         {
             var result = new AnalysisResult(request);
@@ -30,6 +35,12 @@ namespace SeoAnalyser.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Calculate occurences of words in splitted input.
+        /// </summary>
+        /// <param name="splittedInput">Splitted input from <see cref="WordAnalyser.SplitWords(string, bool)"/>.</param>
+        /// <param name="wordsToCount">Words to calculate occurences.</param>
+        /// <returns>Return word occurrences count.</returns>
         public Task<Dictionary<string, int>> CalculateOccurrences(List<string> splittedInput, List<string> wordsToCount)
         {
             splittedInput = PreprocessStrings(splittedInput);
@@ -45,6 +56,12 @@ namespace SeoAnalyser.Utilities
             return Task.FromResult(joined);
         }
 
+        /// <summary>
+        /// Split string into a list of words to be further analysed.
+        /// </summary>
+        /// <param name="input">String to be analysed.</param>
+        /// <param name="isRemoveStopWords">Should stop-word be removed?</param>
+        /// <returns>List of words ready to be analysed.</returns>
         public Task<List<string>> SplitWords(string input, bool isRemoveStopWords)
         {
             var results = PreprocessStrings(input.Split(WordSeparators, StringSplitOptions.RemoveEmptyEntries));
@@ -56,6 +73,11 @@ namespace SeoAnalyser.Utilities
             return Task.FromResult(results);
         }
 
+        /// <summary>
+        /// Pre-process words to be analysed.
+        /// </summary>
+        /// <param name="input">Words to be analysed.</param>
+        /// <returns>Returns pre-processed words ready to be analysed.</returns>
         public static List<string> PreprocessStrings(IEnumerable<string> input)
         {
             return input.Where(s => !string.IsNullOrEmpty(s)).Select(s => (s ?? "").ToLower().Trim()).ToList();
