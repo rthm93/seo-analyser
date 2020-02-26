@@ -30,8 +30,13 @@ namespace SeoAnalyser.Utilities
         public async Task<AnalysisResult> Analyse(AnalyseRequest request)
         {
             var result = new AnalysisResult(request);
-            var splittedString = await SplitWords(request.Input, request.IsRemoveStopWords);
-            result.WordsAndCount = await CalculateOccurrences(splittedString, splittedString.Distinct().ToList());
+
+            if (request.IsCalculateOccurrencesOfEachWords)
+            {
+                var splittedString = await SplitWords(request.Input, request.IsRemoveStopWords);
+                result.WordsAndCount = await CalculateOccurrences(splittedString, splittedString.Distinct().ToList());
+            }
+
             return result;
         }
 
