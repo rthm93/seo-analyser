@@ -37,6 +37,7 @@ namespace SeoAnalyser.Controllers
                 return View("Index", request);
             }
 
+            var isInputUrl = Uri.IsWellFormedUriString(request.Input, UriKind.Absolute);
             var result = new AnalysisResult(request);
 
             if(!new bool[]
@@ -50,9 +51,15 @@ namespace SeoAnalyser.Controllers
                 return View(result);
             }
 
+            if(!isInputUrl && !request.IsCalculateOccurrencesOfEachWords)
+            {
+                ViewBag.Warning = "'Calculate Occurrences of Each Words?' must be checked when analysing words.";
+                return View(result);
+            }
+
             try
             {
-                ISeoAnalyser analyser = Uri.IsWellFormedUriString(request.Input, UriKind.Absolute) ? new HtmlAnalyser(new LinkAnalyser(), new MetaAnalyser(), new WordAnalyser()) as ISeoAnalyser : new WordAnalyser() as ISeoAnalyser;
+                ISeoAnalyser analyser = isInputUrl ? new HtmlAnalyser(new LinkAnalyser(), new MetaAnalyser(), new WordAnalyser()) as ISeoAnalyser : new WordAnalyser() as ISeoAnalyser;
                 result = await analyser.Analyse(request);
             }
             catch (HttpRequestException)
